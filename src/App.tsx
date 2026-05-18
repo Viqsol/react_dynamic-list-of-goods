@@ -7,6 +7,7 @@ import { Good } from './types/Good';
 
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <div className="App">
@@ -15,13 +16,12 @@ export const App: React.FC = () => {
       <button
         type="button"
         data-cy="all-button"
-        onClick={() =>
+        onClick={() => {
+          setError(null);
           getAll()
             .then(setGoods)
-            .catch(error => {
-              throw new Error(error);
-            })
-        }
+            .catch(err => setError(err.message || 'Failed to fetch goods'));
+        }}
       >
         Load all goods
       </button>
@@ -29,13 +29,12 @@ export const App: React.FC = () => {
       <button
         type="button"
         data-cy="first-five-button"
-        onClick={() =>
+        onClick={() => {
+          setError(null);
           get5First()
             .then(setGoods)
-            .catch(error => {
-              throw new Error(error);
-            })
-        }
+            .catch(err => setError(err.message || 'Failed to fetch goods'));
+        }}
       >
         Load 5 first goods
       </button>
@@ -43,16 +42,17 @@ export const App: React.FC = () => {
       <button
         type="button"
         data-cy="red-button"
-        onClick={() =>
+        onClick={() => {
+          setError(null);
           getRedGoods()
             .then(setGoods)
-            .catch(error => {
-              throw new Error(error);
-            })
-        }
+            .catch(err => setError(err.message || 'Failed to fetch goods'));
+        }}
       >
         Load red goods
       </button>
+
+      {error && <p className="App__error">{error}</p>}
 
       <GoodsList goods={goods} />
     </div>
